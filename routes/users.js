@@ -31,18 +31,22 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    const imagePath = path.join(__dirname, '..', user.user_image);
-    console.log('imgPath => ', imagePath);
-    // const imagePath = user.user_image;
+    if (!user.user_image) {
+      user.user_image = 'public\\images\\Profile\\default_img.jpg';
+    } else {
+      const imagePath = path.join(__dirname, '..', user.user_image);
+      console.log('imgPath => ', imagePath);
+      // const imagePath = user.user_image;
+    }
 
     console.log('Constructed imagePath:', imagePath);
 
-    console.log(imagePath);
-    // Check if the image file exists
-    if (!fs.existsSync(imagePath)) {
-      console.log('Image not found at:', imagePath);
-      return res.status(404).json({ error: 'Image not found' });
-    }
+    // console.log(imagePath);
+    // // Check if the image file exists
+    // if (!fs.existsSync(imagePath)) {
+    //   console.log('Image not found at:', imagePath);
+    //   return res.status(404).json({ error: 'Image not found' });
+    // }
 
     // Read the image file as a binary buffer
     const imageBuffer = fs.readFileSync(imagePath);
