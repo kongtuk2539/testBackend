@@ -31,22 +31,18 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if (!user.user_image) {
-      user.user_image = 'public\\images\\Profile\\default_img.jpg';
-    } else {
-      const imagePath = path.join(__dirname, '..', user.user_image);
-      console.log('imgPath => ', imagePath);
-      // const imagePath = user.user_image;
-    }
+    const imagePath = path.join(__dirname, '..', user.user_image);
+    console.log('imgPath => ', imagePath);
+    // const imagePath = user.user_image;
 
     console.log('Constructed imagePath:', imagePath);
 
-    // console.log(imagePath);
-    // // Check if the image file exists
-    // if (!fs.existsSync(imagePath)) {
-    //   console.log('Image not found at:', imagePath);
-    //   return res.status(404).json({ error: 'Image not found' });
-    // }
+    console.log(imagePath);
+    // Check if the image file exists
+    if (!fs.existsSync(imagePath)) {
+      console.log('Image not found at:', imagePath);
+      return res.status(404).json({ error: 'Image not found' });
+    }
 
     // Read the image file as a binary buffer
     const imageBuffer = fs.readFileSync(imagePath);
@@ -77,23 +73,21 @@ router.post('/', upload.single('user_image'), async (req, res, next) => {
       return res.status(404).json({ message: 'Username is already used' });
     }
 
-    // // Check if req.file is defined and contains the uploaded image
-    // const userImagePath = req.file
-    //   ? req.file.path
-    //   : 'public\\images\\Profile\\default_img.jpg';
+    // Check if req.file is defined and contains the uploaded image
+    const userImagePath = req.file
+      ? req.file.path
+      : path.join('public', 'images', 'Profile', 'default_img.jpg');
 
-    // // Create a new user object with the uploaded image path
-    // const newUser = new User({
-    //   ...req.body,
-    //   user_image: userImagePath,
-    // });
+    // Create a new user object with the uploaded image path
+    const newUser = new User({
+      ...req.body,
+      user_image: userImagePath,
+    });
 
-    // // Save the user to the database
-    // await newUser.save();
+    // Save the user to the database
+    await newUser.save();
 
-    user.save();
-
-    res.json(user);
+    res.json(newUser);
   } catch (err) {
     next(err);
   }
@@ -104,7 +98,12 @@ router.put('/:id', upload.single('user_image'), async (req, res, next) => {
     const userId = req.params.id;
     const updatedData = req.body;
 
-    updatedData.user_image = 'public\\images\\Profile\\default_img.jpg';
+    updatedData.user_image = path.join(
+      'public',
+      'images',
+      'Profile',
+      'default_img.jpg'
+    );
 
     // Check if the request included an image update
     if (req.file) {
