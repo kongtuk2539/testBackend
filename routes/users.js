@@ -32,15 +32,10 @@ router.get('/:id', async (req, res, next) => {
     }
 
     const imagePath = path.join(__dirname, '..', user.user_image);
-    console.log('imgPath => ', imagePath);
-    // const imagePath = user.user_image;
-
-    console.log('Constructed imagePath:', imagePath);
 
     console.log(imagePath);
     // Check if the image file exists
     if (!fs.existsSync(imagePath)) {
-      console.log('Image not found at:', imagePath);
       return res.status(404).json({ error: 'Image not found' });
     }
 
