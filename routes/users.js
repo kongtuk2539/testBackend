@@ -73,21 +73,23 @@ router.post('/', upload.single('user_image'), async (req, res, next) => {
       return res.status(404).json({ message: 'Username is already used' });
     }
 
-    // Check if req.file is defined and contains the uploaded image
-    const userImagePath = req.file
-      ? req.file.path
-      : 'public\\images\\Profile\\default_img.jpg';
+    // // Check if req.file is defined and contains the uploaded image
+    // const userImagePath = req.file
+    //   ? req.file.path
+    //   : 'public\\images\\Profile\\default_img.jpg';
 
-    // Create a new user object with the uploaded image path
-    const newUser = new User({
-      ...req.body,
-      user_image: userImagePath,
-    });
+    // // Create a new user object with the uploaded image path
+    // const newUser = new User({
+    //   ...req.body,
+    //   user_image: userImagePath,
+    // });
 
-    // Save the user to the database
-    await newUser.save();
+    // // Save the user to the database
+    // await newUser.save();
 
-    res.json(newUser);
+    user.save();
+
+    res.json(user);
   } catch (err) {
     next(err);
   }
